@@ -6,6 +6,7 @@ Working on:
   * Chrome.
 
 Not working on:
-  * Opera
+  * Opera,
+  * Microsoft Edge.
 ---
 Check out the working demo: https://html5-speech-recognition.herokuapp.com/
