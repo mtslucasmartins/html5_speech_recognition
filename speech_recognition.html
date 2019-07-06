@@ -92,7 +92,7 @@
       const that = this;
       const recordToggleButton = document.querySelector('#record-toggle');
       const recordToggleButtonIcon = document.querySelector('#record-toggle-icon');
-
+      const recordTranscriptionArea = document.querySelector('#record-transcription-area');
       const recognition = this.setupSpeechRecognition();
       recognition.onstart = function () {
         that.isRecording = true;
@@ -133,13 +133,10 @@
     }
 
     showAlternatives = (event) => {
-      let finalTranscription = "";
-      const recordTranscriptionArea = document.querySelector('#record-transcription-area');
       const srAlternativesContainer = document.querySelector('#sr-alternatives-container');
       srAlternativesContainer.innerHTML = '';
       let counter = 0;
       for (let result of event.results) {
-        finalTranscription = result[0].transcript;
         srAlternativesContainer.appendChild(createElement(
           'small', "text-muted mt-2", `Result ${++counter}:`
         ));
@@ -151,7 +148,6 @@
         }
         srAlternativesContainer.appendChild(document.createElement('br'));
       }
-      recordTranscriptionArea.innerHTML = transcription
     };
 
     // CSS Utilities 
