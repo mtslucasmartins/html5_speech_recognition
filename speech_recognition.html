@@ -38,9 +38,11 @@
   <div class="container-fluid text-center py-0 mt-0">
     <div class="row">
       <div id="sr-alternatives-container" class="container">
-        <span class="badge badge-primary px-3 py-2">Primary</span>
-        <span class="badge badge-primary px-3 py-2">Primary</span>
-        <span class="badge badge-primary px-3 py-2">Primary</span>
+        <small class="text-muted mt-2">Alternatives will show here:</small><br>
+        <span class="badge badge-primary px-3 py-2">have a nice day</span>
+        <span class="badge badge-primary px-3 py-2">I have a nice day</span>
+        <span class="badge badge-primary px-3 py-2">having a nice day</span>
+        <span class="badge badge-primary px-3 py-2">have a nice.day</span>
       </div>
     </div>
   </div>
@@ -84,21 +86,17 @@
       const recordToggleButton = document.querySelector('#record-toggle');
       const recordToggleButtonIcon = document.querySelector('#record-toggle-icon');
       const recordTranscriptionArea = document.querySelector('#record-transcription-area');
-
       const recognition = this.setupSpeechRecognition();
-
       recognition.onstart = function () {
         that.isRecording = true;
         that.toggleCssClasses(recordToggleButton, 'bg-success', 'bg-light');
         that.toggleCssClasses(recordToggleButton, 'text-light', 'text-dark');
       };
-
       recognition.onend = function () {
         that.isRecording = false;
         that.toggleCssClasses(recordToggleButton, 'bg-success', 'bg-light');
         that.toggleCssClasses(recordToggleButton, 'text-light', 'text-dark');
       };
-
       recognition.onresult = function (event) {
         that.showAlternatives(event);
         transcription = "";
@@ -106,17 +104,11 @@
           transcription += result[0].transcript;
         }
         recordTranscriptionArea.innerHTML = transcription;
-
-        // transcription = event.results[0][0].transcript;
-        // console.log(event.results);
-        // console.log(transcription);
-        // recordTranscriptionArea.innerHTML = transcription;
       };
       recognition.onnomatch = function () {
         transcription = "Oh sorry, I couldn't hear you!";
         recordTranscriptionArea.innerHTML = transcription;
       };
-
       recordToggleButton.addEventListener('click', function (e) {
         if (that.isRecording) {
           recognition.stop();
@@ -126,17 +118,27 @@
       }, false);
     };
 
+    createElement = (name, classes = "", innerHTML = "") => {
+      let element = document.createElement(name);
+      element.className = classes;
+      element.innerHTML = innerHTML;
+      return element;
+    }
+
     showAlternatives = (event) => {
       const srAlternativesContainer = document.querySelector('#sr-alternatives-container');
       srAlternativesContainer.innerHTML = '';
+      let counter = 0;
       for (let result of event.results) {
+        srAlternativesContainer.appendChild(createElement(
+          'small', "text-muted mt-2", `Result ${++counter}:`
+        ));
+        srAlternativesContainer.appendChild(document.createElement('br'));
         for (let alternative of result) {
-          let alternativeBadge = document.createElement('span');
-          alternativeBadge.className = "badge badge-primary px-3 py-2 m-2";
-          alternativeBadge.innerHTML = alternative.transcript;
-          srAlternativesContainer.appendChild(alternativeBadge);
+          srAlternativesContainer.appendChild(createElement(
+            'span', "badge badge-primary px-3 py-2 m-2", alternative.transcript
+          ));
         }
-        // Appends a line break for other results
         srAlternativesContainer.appendChild(document.createElement('br'));
       }
     };
@@ -151,7 +153,6 @@
         appendCssClass(el, c1);
       }
     }
-
     containsCssClass = (el, c) => el.className.split(" ").indexOf(c) >= 0;
     removeCssClass = (el, c) => {
       let classes = el.className.split(" ");
